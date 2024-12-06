@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Račun</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url('pozadina.jpg');
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden; /* Prevent page scrolling */
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 700px;
+            margin: 20px;
+            max-height: 80vh;
+            overflow-y: auto; /* Enable scrolling within the form */
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="date"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .item {
+            width: calc(100% - 22px);
+        }
+        .quantity,
+        .price {
+            width: calc(50% - 22px);
+        }
+        .item-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .item-row label,
+        .item-row input {
+            margin-bottom: 10px;
+        }
+        .item-row input {
+            flex: 1;
+            margin-right: 10px;
+        }
+        .item-row input:last-child {
+            margin-right: 0;
+        }
+        .item-row .item {
+            flex: 2;
+        }
+        .item-row .quantity,
+        .item-row .price {
+            flex: 1;
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px; /* Add gap between form fields */
+        }
+        .form-row .field {
+            flex: 1;
+            min-width: calc(50% - 10px);
+            margin-bottom: 15px;
+        }
+        .form-row label {
+            margin-bottom: 5px;
+        }
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .add-item-button,
+        .remove-item-button {
+            background-color: #959595;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .add-item-button:hover,
+        .remove-item-button:hover {
+            background-color: #828282;
+        }
+        button,
+        input[type="button"] {
+            background-color: #b0b0b0;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            max-width: 200px;
+        }
+        button:hover,
+        input[type="button"]:hover {
+            background-color: #9e9a9a;
+        }
+        @media (max-width: 600px) {
+            .item-row input {
+                flex: 1 1 100%;
+                margin-right: 0;
+            }
+            .item-row .item {
+                flex: 1 1 100%;
+            }
+            .item-row .quantity,
+            .item-row .price {
+                flex: 1 1 100%;
+            }
+            .form-row .field {
+                width: 100%;
+            }
+            #recipient {
+                width: 80%  !important; /* Ovdje možeš postaviti željenu duljinu, npr. 80% */
+            }
+            
+        }
+    </style>
+</head>
+<body>
+    <form id="invoiceForm">
+        <h2>Kreiranje računa</h2>
+        <div class="form-row">
+            <div class="field">
+                <label for="recipient">Račun za:</label>
+                <input type="text" id="recipient" name="recipient" required>
+            </div>
+             
+            <div class="field">
+                <label for="address">Adresa:</label>
+                <input type="text" id="address" name="address" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="field">
+                <label for="postalCode">Poštanski Broj:</label>
+                <input type="text" id="postalCode" name="postalCode" required>
+            </div>
+            <div class="field">
+                <label for="city">Grad:</label>
+                <input type="text" id="city" name="city" required>
+            </div>
+            <div class="field">
+                <label for="date">Datum:</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+        </div>
+
+        <div id="items">
+            <div class="item-row">
+                <label for="item">Vrsta usluge:</label>
+                <input type="text" class="item" name="item[]" required>
+                <label for="quantity">Količina:</label>
+                <input type="number" class="quantity" name="quantity[]" required>
+                <select class="unit" name="unit[]">
+                    <option value="m²">m²</option>
+                    <option value="m">m</option>
+                </select>
+                <label for="price">Cijena:</label>
+                <input type="number" class="price" name="price[]" required>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <div style="display: flex; gap: 10px;">
+                <button type="button" class="remove-item-button" onclick="removeItem()">-</button>
+                <button type="button" class="add-item-button" onclick="addItem()">+</button>
+            </div>
+            <input type="button" value="Generiraj PDF" onclick="generatePDF()">
+        </div>
+    </form>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.18/jspdf.plugin.autotable.min.js"></script>
+    <script src="logo.js"></script> <!-- Include your logo file -->
+    <script>
+        function addItem() {
+            const itemsDiv = document.getElementById('items');
+            const newItemRow = document.createElement('div');
+            newItemRow.className = 'item-row';
+            newItemRow.innerHTML = `
+        <label for="item">Vrsta usluge:</label>
+        <input type="text" class="item" name="item[]" required>
+        <label for="quantity">Količina:</label>
+        <input type="number" class="quantity" name="quantity[]" required>
+        <select class="unit" name="unit[]">
+            <option value="m²">m²</option>
+            <option value="m">m</option>
+        </select>
+        <label for="price">Cijena:</label>
+        <input type="number" class="price" name="price[]" required>
+    `;
+            itemsDiv.appendChild(newItemRow);
+        }
+
+        function removeItem() {
+            const itemsDiv = document.getElementById('items');
+            const itemRows = itemsDiv.getElementsByClassName('item-row');
+            if (itemRows.length > 1) {
+                itemsDiv.removeChild(itemRows[itemRows.length - 1]);
+            }
+        }
+
+        function formatCurrency(value) {
+            return parseFloat(value).toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+
+         function formatDate(dateString) {
+            const date = new Date(dateString);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0'); 
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const pageHeight = doc.internal.pageSize.height;
+
+            const recipient = document.getElementById('recipient').value;
+            const address = document.getElementById('address').value;
+            const postalCode = document.getElementById('postalCode').value;
+            const city = document.getElementById('city').value;
+            const date = document.getElementById('date').value;
+
+             // Format the date
+            const formattedDate = formatDate(date);
+
+            // Podaci za tablicu
+            const items = document.querySelectorAll('.item');
+            const quantities = document.querySelectorAll('.quantity');
+            const units = document.querySelectorAll('.unit'); // Dodaj jedinice
+            const prices = document.querySelectorAll('.price');
+            const tableData = [];
+            let total = 0;
+
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i].value;
+                const quantity = parseFloat(quantities[i].value);
+                const unit = units[i].value; // Dohvati odabranu jedinicu
+                const price = parseFloat(prices[i].value);
+                const rowTotal = quantity * price;
+                total += rowTotal;
+                tableData.push([i + 1, item,`${quantity} ${unit}`, formatCurrency(price), formatCurrency(rowTotal)]);
+            }
+
+            // Adding the logo
+            doc.addImage(logoBase64, 'JPEG', 0, 0, 210, 110); // Adjust the position and size as needed
+
+            // Dodavanje podataka u PDF
+            doc.setFontSize(20);
+            doc.setFontSize(12);
+            doc.text(`${recipient}`, 15, 85);
+            doc.text(`${address}`, 15, 90);
+            doc.text(`${postalCode}, ${city}`, 15, 95); // Adjusted position
+            doc.text(`Datum: ${formattedDate}`, 157, 90); // Adjusted position
+
+            // Dodavanje tablice
+            doc.autoTable({
+                head: [['Stavka', 'Vrsta usluge', 'Kolicina', 'Cijena', 'Ukupno']],
+                body: tableData,
+                foot: [['', '', '','Ukupno potraživanje:', formatCurrency(total) + ' KM']],
+                startY: 100, // Adjusted position
+                styles: {
+                    halign: 'center'
+                },
+                headStyles: {
+                    fillColor: [160, 160, 160]
+                },
+                footStyles: {
+                    fillColor: [160, 160, 160],
+                    halign: 'right',
+                    //cellWidth: { column: 5, cell: 5 },  
+                },
+                didDrawPage: function (data) {
+                    const bottomPos = data.cursor.y + 30; // Height of the footer content
+                    if (bottomPos > pageHeight - 50) {
+                        doc.addPage();
+                        data.cursor.y = 30; // Reset cursor position on new page
+                    }
+                }
+            });
+
+            // Calculate space needed for payment details and signatures
+            const spaceNeeded = 50; // Space needed for the footer content
+            let bottomY = doc.internal.pageSize.height - spaceNeeded;
+            const tableFinalY = doc.autoTable.previous.finalY + 10;
+
+            if (tableFinalY + spaceNeeded > bottomY) {
+                doc.addPage();
+                bottomY = doc.internal.pageSize.height - spaceNeeded;
+            }
+
+            // Dodavanje podataka za uplatu
+            doc.text('Podaci za uplatu:', 15, bottomY - 30);
+            doc.text('Banka: UniCredit Bank', 15, bottomY - 25);
+            doc.text('Vlasnik racuna: Ilija Zadro', 15, bottomY - 20);
+            doc.text('Broj racuna: 3381602285945933', 15, bottomY - 15);
+            doc.setDrawColor(0, 0, 0);
+            doc.line(15, bottomY - 12, 195, bottomY - 12); // Horizontal line below payment details
+
+            // Dodavanje potpisa
+            const signatureLineY = bottomY + 20;
+            doc.text('Potpis klijenta', 15, signatureLineY);
+            doc.line(15, signatureLineY - 5, 80, signatureLineY - 5); // Signature line for client
+            doc.line(130, signatureLineY - 5, 195, signatureLineY - 5); // Signature line for provider
+            doc.text('Potpis i pecat izvršitelja usluga', 130, signatureLineY);
+
+            doc.addImage(stampBase64, 'JPEG', 140, signatureLineY - 27, 40, 20); // Adjust position and size as needed
+
+            // Preuzimanje PDF-a
+            doc.save('racun.pdf');
+        }
+    </script>
+</body>
+</html>

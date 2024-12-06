@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Izbornik</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url('pozadina.jpg');
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden; /* Prevent page scrolling */
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        .button {
+            background-color: #b0b0b0;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+            width: 100%;
+            text-align: center;
+        }
+        .button:hover {
+            background-color: #9e9a9a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Zadro</h2>
+        <button class="button" onclick="window.location.href='racun.html'">Račun</button>
+        <button class="button" onclick="window.location.href='predracun.html'">Predračun</button>
+        <button class="button" onclick="window.location.href='ponuda.html'">Ponuda</button>
+    </div>
+</body>
+</html>
