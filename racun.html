@@ -16,7 +16,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            overflow: hidden; /* Prevent page scrolling */
+            overflow: hidden;
         }
         h2 {
             text-align: center;
@@ -29,9 +29,8 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 90%;
             max-width: 700px;
-            margin: 20px;
             max-height: 80vh;
-            overflow-y: auto; /* Enable scrolling within the form */
+            overflow-y: auto;
         }
         label {
             display: block;
@@ -48,52 +47,22 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
-        .item {
-            width: calc(100% - 22px);
-        }
-        .quantity,
-        .price {
-            width: calc(50% - 22px);
-        }
         .item-row {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .item-row label,
-        .item-row input {
-            margin-bottom: 10px;
-        }
-        .item-row input {
-            flex: 1;
-            margin-right: 10px;
-        }
-        .item-row input:last-child {
-            margin-right: 0;
-        }
-        .item-row .item {
-            flex: 2;
-        }
-        .item-row .quantity,
-        .item-row .price {
-            flex: 1;
-        }
-        .form-row {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px; /* Add gap between form fields */
-        }
-        .form-row .field {
-            flex: 1;
-            min-width: calc(50% - 10px);
+            flex-direction: column;
             margin-bottom: 15px;
         }
-        .form-row label {
-            margin-bottom: 5px;
+        .item-row input,
+        .item-row select {
+            margin-bottom: 10px;
+        }
+        .item-details {
+            display: flex;
+            gap: 10px;
+        }
+        .item-details input,
+        .item-details select {
+            flex: 1;
         }
         .buttons {
             display: flex;
@@ -137,25 +106,23 @@
         input[type="button"]:hover {
             background-color: #9e9a9a;
         }
-        @media (max-width: 600px) {
-            .item-row input {
-                flex: 1 1 100%;
-                margin-right: 0;
-            }
-            .item-row .item {
-                flex: 1 1 100%;
-            }
-            .item-row .quantity,
-            .item-row .price {
-                flex: 1 1 100%;
-            }
-            .form-row .field {
-                width: 100%;
-            }
-            #recipient {
-                width: 80%  !important; /* Ovdje možeš postaviti željenu duljinu, npr. 80% */
-            }
-            
+        /* Adjusting the layout of quantity and unit inputs */
+        .item-row .item-details {
+            display: flex;
+            align-items: center;
+        }
+        .item-row .item-details input,
+        .item-row .item-details select {
+            width: 30%;
+        }
+        .item-row .item-details input[type="number"] {
+            width: 40%;
+        }
+        .item-row .item-details select {
+            width: 25%;
+        }
+        .generate-pdf-btn {
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -189,27 +156,31 @@
         </div>
 
         <div id="items">
-            <div class="item-row">
-                <label for="item">Vrsta usluge:</label>
-                <input type="text" class="item" name="item[]" required>
-                <label for="quantity">Količina:</label>
-                <input type="number" class="quantity" name="quantity[]" required>
-                <select class="unit" name="unit[]">
-                    <option value="m²">m²</option>
-                    <option value="m">m</option>
-                </select>
-                <label for="price">Cijena:</label>
-                <input type="number" class="price" name="price[]" required>
-            </div>
+    <div class="item-row">
+        <label for="item">Vrsta usluge:</label>
+        <input type="text" class="item" name="item[]" required>
+        <div class="item-details">
+            <label for="quantity">Količina:</label>
+            <input type="number" class="quantity" name="quantity[]" required>
+            <select class="unit" name="unit[]">
+                <option value="m²">m²</option>
+                <option value="m">m</option>
+            </select>
+            <label for="price">Cijena:</label>
+            <input type="number" class="price" name="price[]" required>
         </div>
+    </div>
+</div>
 
-        <div class="buttons">
-            <div style="display: flex; gap: 10px;">
-                <button type="button" class="remove-item-button" onclick="removeItem()">-</button>
-                <button type="button" class="add-item-button" onclick="addItem()">+</button>
-            </div>
-            <input type="button" value="Generiraj PDF" onclick="generatePDF()">
-        </div>
+<div class="buttons">
+    <div style="display: flex; gap: 10px;">
+        <button type="button" class="remove-item-button" onclick="removeItem()">-</button>
+        <button type="button" class="add-item-button" onclick="addItem()">+</button>
+    </div>
+    <input type="button" value="Generiraj PDF" onclick="generatePDF()">
+</div>
+
+    </form>
     </form>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -219,21 +190,24 @@
         function addItem() {
             const itemsDiv = document.getElementById('items');
             const newItemRow = document.createElement('div');
-            newItemRow.className = 'item-row';
+            newItemRow.className = 'item-row'; 
             newItemRow.innerHTML = `
-        <label for="item">Vrsta usluge:</label>
-        <input type="text" class="item" name="item[]" required>
-        <label for="quantity">Količina:</label>
-        <input type="number" class="quantity" name="quantity[]" required>
-        <select class="unit" name="unit[]">
-            <option value="m²">m²</option>
-            <option value="m">m</option>
-        </select>
-        <label for="price">Cijena:</label>
-        <input type="number" class="price" name="price[]" required>
-    `;
+                <label for="item">Vrsta usluge:</label>
+                <input type="text" class="item" name="item[]" required>
+                <div class="item-details">
+                    <label for="quantity">Količina:</label>
+                    <input type="number" class="quantity" name="quantity[]" required>
+                    <select class="unit" name="unit[]">
+                        <option value="m²">m²</option>
+                        <option value="m">m</option>
+                    </select>
+                    <label for="price">Cijena:</label>
+                    <input type="number" class="price" name="price[]" required>
+                </div>
+            `;
             itemsDiv.appendChild(newItemRow);
         }
+        
 
         function removeItem() {
             const itemsDiv = document.getElementById('items');
