@@ -17,6 +17,8 @@
             align-items: center;
             height: 100vh;
             overflow: hidden; /* Prevent page scrolling */
+            background-attachment: fixed;
+
         }
         .container {
             text-align: center;
@@ -41,6 +43,15 @@
         .button:hover {
             background-color: #9e9a9a;
         }
+        
+        @media (max-width: 768px) {
+            body {
+                background-image: url('pozadina.jpg');
+                background-size: cover;
+                background-position: center;
+            }
+        }
+        
     </style>
 </head>
 <body>
